@@ -1,21 +1,39 @@
 import express from "express";
-import path from "path";
+import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
+import cors from "cors";
 
-// In ES modules, __dirname is not available, so we use this workaround to get it
-const __dirname = path.resolve();
+import { connectDB } from "./lib/db.js";
+import userRoutes from "./routes/user.route.js";
+import mailRoutes from "./routes/mail.route.js";
+import blogRoutes from "./routes/blog.route.js";
+
+dotenv.config();
 
 const app = express();
+const PORT = process.env.PORT || 5000;
 
-// Example of serving static files from a folder
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.json());
+app.use(cookieParser());
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 
-// Example route
-app.get("/", (req, res) => {
-  res.send("Hello World");
-});
+app.use("/api/blog", blogRoutes);
+app.use("/api/user", userRoutes);
+app.use("/api/mail", mailRoutes);
 
-// Set the port and start the server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+try {
+  app.listen(PORT, () => {
+    console.log("Server is running on http://localhost:" + PORT);
+    connectDB();
+  });
+} catch (error) {
+  console.log("Error connecting to server", error.message);
+}
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "/frontend/dist")));
+
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
+  });
+}
