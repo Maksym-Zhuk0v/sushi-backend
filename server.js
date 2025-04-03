@@ -1,31 +1,21 @@
 import express from "express";
-import dotenv from "dotenv";
-import cookieParser from "cookie-parser";
-import cors from "cors";
+import path from "path";
 
-import { connectDB } from "./lib/db.js";
-import userRoutes from "./routes/user.route.js";
-import mailRoutes from "./routes/mail.route.js";
-import blogRoutes from "./routes/blog.route.js";
-
-dotenv.config();
+// In ES modules, __dirname is not available, so we use this workaround to get it
+const __dirname = path.resolve();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
 
-app.use(express.json());
-app.use(cookieParser());
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+// Example of serving static files from a folder
+app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/api/blog", blogRoutes);
-app.use("/api/user", userRoutes);
-app.use("/api/mail", mailRoutes);
+// Example route
+app.get("/", (req, res) => {
+  res.send("Hello World");
+});
 
-try {
-  app.listen(PORT, () => {
-    console.log("Server is running on http://localhost:" + PORT);
-    connectDB();
-  });
-} catch (error) {
-  console.log("Error connecting to server", error.message);
-}
+// Set the port and start the server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
