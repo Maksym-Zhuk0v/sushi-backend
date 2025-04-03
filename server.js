@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 
 app.use("/api/blog", blogRoutes);
 app.use("/api/user", userRoutes);
@@ -25,7 +25,6 @@ app.use("/api/mail", mailRoutes);
 
 try {
   app.listen(PORT, () => {
-    console.log("Server is running on http://localhost:" + PORT);
     connectDB();
   });
 } catch (error) {
