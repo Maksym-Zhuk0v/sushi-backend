@@ -2,7 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import path from "path"; // Missing import
+import path from "path";
 
 import { connectDB } from "./lib/db.js";
 import userRoutes from "./routes/user.route.js";
@@ -18,7 +18,6 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 
-// API routes
 app.use("/api/blog", blogRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/mail", mailRoutes);
@@ -32,7 +31,6 @@ try {
   console.log("Error connecting to server", error.message);
 }
 
-// Serve frontend in production
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "/frontend/dist")));
 
