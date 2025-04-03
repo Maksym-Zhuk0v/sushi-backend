@@ -23,6 +23,10 @@ app.use("/api/blog", blogRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/mail", mailRoutes);
 
+app.get("/", (req, res) => {
+  res.status(200).json({ message: "Server is running" });
+});
+
 try {
   app.listen(PORT, () => {
     console.log("Server is running on http://localhost:" + PORT);
