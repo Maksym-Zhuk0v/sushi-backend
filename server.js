@@ -10,6 +10,7 @@ import mailRoutes from "./routes/mail.route.js";
 import blogRoutes from "./routes/blog.route.js";
 
 dotenv.config();
+const __dirname = path.resolve();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
