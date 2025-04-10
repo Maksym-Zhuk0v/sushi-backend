@@ -4,7 +4,8 @@ import { send } from "../controllers/MailController.js";
 const router = express.Router();
 
 router.get("/", (req, res) => {
-  res.send("mail route");
+  const PORT = process.env.MONGO_URI;
+  res.send(PORT);
 });
 router.post("/", send);
 
