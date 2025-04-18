@@ -80,32 +80,32 @@ export const signup = async (req, res) => {
 };
 
 export const login = async (req, res) => {
-  // try {
-  //   const { email, password } = req.body;
-  //   const user = await User.findOne({ email });
-
-  //   if (user && (await user.comparePassword(password))) {
-  //     const { accessToken, refreshToken } = generateTokens(user._id);
-  //     await storeRefreshToken(user._id, refreshToken);
-  //     setCookies(res, accessToken, refreshToken);
-
-  //     res.json({
-  //       _id: user._id,
-  //       name: user.name,
-  //       email: user.email,
-  //       role: user.role,
-  //     });
-  //   } else {
-  //     res.status(400).json({ message: "Invalid email or password" });
-  //   }
   try {
-    const { email } = req.body;
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
 
-    await sendMailFunc({
-      to: email,
-      text: "beri uzhe energy litenergy",
-      subject: "leave",
-    });
+    if (user && (await user.comparePassword(password))) {
+      const { accessToken, refreshToken } = generateTokens(user._id);
+      await storeRefreshToken(user._id, refreshToken);
+      setCookies(res, accessToken, refreshToken);
+
+      res.json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      });
+    } else {
+      res.status(400).json({ message: "Invalid email or password" });
+    }
+    // try {
+    //   const { email } = req.body;
+
+    //   await sendMailFunc({
+    //     to: email,
+    //     text: "beri uzhe energy litenergy",
+    //     subject: "leave",
+    //   });
   } catch (error) {
     console.log("Error in login controller", error.message);
     res.status(500).json({ message: error.message });
