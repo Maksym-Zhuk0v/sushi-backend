@@ -63,7 +63,11 @@ export const signup = async (req, res) => {
 
     await sendMailFunc({
       to: email,
-      text: `http://localhost:3000/verify?code=${verificationCode.code}`,
+      text: `${
+        process.env.NODE_ENV === "production"
+          ? process.env.CLIENT_URL
+          : "http://localhost:3000"
+      }/verify?code=${verificationCode.code}`,
       subject: "Welcome",
     });
 
@@ -98,14 +102,6 @@ export const login = async (req, res) => {
     } else {
       res.status(400).json({ message: "Invalid email or password" });
     }
-    // try {
-    //   const { email } = req.body;
-
-    //   await sendMailFunc({
-    //     to: email,
-    //     text: "beri uzhe energy litenergy",
-    //     subject: "leave",
-    //   });
   } catch (error) {
     console.log("Error in login controller", error.message);
     res.status(500).json({ message: error.message });
